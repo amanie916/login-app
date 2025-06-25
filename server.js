@@ -1,3 +1,4 @@
+require('dotenv').config(); //loads dotenv library, cute lil package that knows how to read the .env file
 const express = require('express'); //Brain that handles POST requests/responses: builds web/API server
 const cors = require('cors'); //our famous middleware, allows browser to talk to front-end. facilitates otherwise forbidden front end to back end communication from whatever origin
 const bcrypt = require('bcrypt');
@@ -9,8 +10,7 @@ app.use(cors()); //allows cross-origin requests/ front end to send requests
 app.use(express.json()); //let's backend read JSON data from request body
 app.use(express.static('public'));
 
-const SECRET = 'my_jwt_secret'; 
-//^jwt secret key to sign tokens/ ensure their authenticity
+//^jwt secret key in .env hidden file to sign tokens/ ensure their authenticity
 
 const numRounds = 10; //setting to that 10 salt round sweet spot
 
@@ -31,7 +31,7 @@ app.post('/login', async (req, res) => {
         return res.status(401).json({msg: 'Incorrect password' });
     }
     //return a jwt if everything is gucci 
-    const token = jwt.sign({ email: user.email}, SECRET, {expiresIn: '1h' });
+    const token = jwt.sign({ email: user.email }, process.env.SECRET, { expiresIn: '30d' }); //.env file contents loaded into process.
     res.json({ token }); //send to frontend
 });
 
@@ -44,5 +44,5 @@ bcrypt.hash(testPassword, numRounds, (err, hash) => {
 
 //starts web server and listens for req at port 3000, this just tells us everything working
 app.listen(3000, () => {
-    console.log('Server is running at http://localhost:300');
+    console.log('Server is running at http://localhost:3000');
 });
