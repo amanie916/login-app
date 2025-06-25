@@ -1,0 +1,3 @@
+#choosing to ignore these because they're fat and also lowk unecessary
+node_modules/
+.env
